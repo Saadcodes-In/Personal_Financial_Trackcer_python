@@ -1,6 +1,8 @@
 
 print("Hello, Welcome to your Financial Tracker,\n\t How can i help you?")
 print("1.income\n2.expense\n3.view_report\n4.Exit")
+    
+
 
 
 
@@ -39,9 +41,33 @@ class Financial:
             except (ValueError,TypeError):
                 print(total_expense)
                 break
-    def report():
-        ...
+    def report(n):
+        print("1.Today's Report\n2.Weekly Report\n3.Monthly Report\n4.Exit")
+        report_menu = int(input("Enter the number of report you want:"))
+        if report_menu == 1:
+            f.Todays_Report()
+        elif report_menu == 2:
+            f.Weekly_Report()
+        elif report_menu == 3:
+            f.Monthly_Report()
+        elif report_menu == 4:
+            pass
+        else:
+            print("There was something wrong")
+
 
 f = Financial()
-f.add_income()
-f.add_expenses()
+menu = int(input("Enter the Menu number:"))
+if menu == 1:
+    f.add_income()
+
+elif menu == 2:
+    f.add_expenses()
+    
+elif menu == 3:
+    f.report()
+
+elif menu == 4:
+    print("Thanks")
+else:
+    print("There is a problem")
