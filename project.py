@@ -1,3 +1,5 @@
+from datetime import datetime
+import json
 
 print("Hello, Welcome to your Financial Tracker,\n\t How can i help you?")
 print("1.income\n2.expense\n3.view_report\n4.Exit")
@@ -25,8 +27,6 @@ class Financial:
             pass
 
     def add_expenses(n):
-        total_expense = []
-
         
 
         while True:
@@ -35,11 +35,16 @@ class Financial:
                 price,thing = expense.split(" ")
                 now = datetime.now()
                 now_rounded_to_mins = now.strftime("%Y-%m-%d %H:%M")
-                total_expense.append({"price": price,"thing": thing, "time": now_rounded_to_mins})
+                total_expense = {"price": price,"thing": thing, "time": now_rounded_to_mins}
                 
+                
+                with open("data.json","w") as file:
+                    json.dump(total_expense, file , indent=4)
+        
 
             except (ValueError,TypeError):
-                print(total_expense)
+                
+
                 break
     def report(n):
         print("1.Today's Report\n2.Weekly Report\n3.Monthly Report\n4.Exit")
