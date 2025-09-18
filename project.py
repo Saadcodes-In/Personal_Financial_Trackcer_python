@@ -1,7 +1,8 @@
 from ast import Continue
 from datetime import datetime
 import json
-from typing import ItemsView
+from operator import add
+
 
 
 print("Hello, Welcome to your Financial Tracker,\n\t How can i help you?")
@@ -33,11 +34,11 @@ class Financial:
         while True:
             expense = input(
                 "Enter the thing you spend moneyon(price/thing_category) or enter q to quit: ")
-            if expense.lower() in ("q", quit, exit):
+            if expense.lower() in ("q", "quit", "exit"):
                 print("Your expenses have been saved")
                 break
             try:
-                price, thing = expense.split(" ")
+                thing , price = expense.split(" ")
                 time_now = datetime.now()
                 time_now_rounded_to_mins = time_now.strftime("%Y-%m-%d %H:%M")
                 total_expense = {
@@ -83,18 +84,43 @@ class Financial:
     
 
     def report(n):
-        print("1.Today's Report\n2.Weekly Report\n3.Monthly Report\n4.Exit")
-        report_menu = int(input("Enter the number of report you want:"))
+        print("1.Total_money_spent\n2.List of items\n3.Exit")
+        report_menu = int(input(""))
         if report_menu == 1:
-            f.Todays_Report()
+            f.Total_Money_Spent()
         elif report_menu == 2:
-            f.Weekly_Report()
+            f.List_of_Items()
         elif report_menu == 3:
-            f.Monthly_Report()
-        elif report_menu == 4:
-            pass
+            print("Exit")
+            
+        
         else:
             print("There was something wrong")
+    def Total_Money_Spent(n):
+        with open("data.json", "r") as f:
+                
+                 data = json.load(f)
+                 total = 0
+                
+                 for item in data:
+                     if isinstance(item, dict):
+                         
+                            total += int(item["price"])
+                                   
+                             
+                             
+                             
+                     else:
+                         print(item) 
+                            
+        print(total)
+    def List_of_Items(n):
+        with open("data.json", "r") as f:
+                
+                 data = json.load(f)
+        for item in data:
+              if isinstance(item, dict):
+                  print(item["thing"])
 
 
 f = Financial()
