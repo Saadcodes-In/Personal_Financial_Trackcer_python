@@ -1,10 +1,11 @@
 from ast import Continue
 from datetime import datetime
 import json
+from typing import ItemsView
 
 
 print("Hello, Welcome to your Financial Tracker,\n\t How can i help you?")
-print("1.income\n2.expense\n3.view_report\n4.Exit")
+print("1.income\n2.expense\n3.view_report\n4.Previous Expense data\n5.Exit")
 
 
 class Financial:
@@ -18,10 +19,14 @@ class Financial:
             pass
 
     def add_income(n):
-        try:
-            income = int(input("Enter your income: "))
-        except ValueError:
-            pass
+        while True:
+            try:
+                income = int(input("Enter your income: "))
+                break
+            except ValueError:
+                print("Your Income should be in numbers.")
+                
+            
 
     def add_expenses(n):
 
@@ -54,6 +59,29 @@ class Financial:
             except (ValueError, TypeError):
                 print("Invalid Format, Please use the given format")
 
+
+    def delete_previous_data(n):
+         print("Enter 1 to clear previous Expense History\nEnter 2 to see the Complete History")
+         value = int(input(""))
+         if value == 1:
+            open("data.json", "w").close()
+            print("Your previous data has been deleted")
+         elif value ==2:
+             with open("data.json", "r") as f:
+                 print("Your expense data is:")
+                 data = json.load(f)
+                 for item in data:
+                     if isinstance(item, dict):
+                         for key, value, time in item.items():
+                             print(f"{key} : {value} : {time}")
+                     else:
+                         print(item)    
+                 
+         else:
+             print("You Entered the wrong value!")
+         
+    
+
     def report(n):
         print("1.Today's Report\n2.Weekly Report\n3.Monthly Report\n4.Exit")
         report_menu = int(input("Enter the number of report you want:"))
@@ -81,6 +109,11 @@ elif menu == 3:
     f.report()
 
 elif menu == 4:
+    f.delete_previous_data()
+ 
+elif menu == 5:
     print("Thanks")
+    
+
 else:
     print("There is a problem")
