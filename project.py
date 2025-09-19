@@ -1,9 +1,10 @@
 from datetime import datetime
 import json
+import time
 
 
 print("Hello, Welcome to your Financial Tracker,\n\t How can i help you?")
-print("1.income\n2.expense\n3.view_report\n4.Previous Expense data\n5.Exit")
+print("1.income\n2.Add expense\n3.view_report\n4.Previous Expense data\n5.Exit")
 
 
 class Financial:
@@ -58,28 +59,6 @@ class Financial:
 
             except (ValueError, TypeError):
                 print("Invalid Format, Please use the given format")
-
-    def delete_previous_data(n):
-        print(
-            "Enter 1 to clear previous Expense History\nEnter 2 to see the Complete History")
-        value = int(input(""))
-        if value == 1:
-            open("data.json", "w").close()
-            print("Your previous data has been deleted")
-        elif value == 2:
-            with open("data.json", "r") as f:
-                print("Your expense data is:")
-                data = json.load(f)
-                for item in data:
-                    if isinstance(item, dict):
-                        for key, value, time in item.items():
-                            print(f"{key} : {value} : {time}")
-                    else:
-                        print(item)
-
-        else:
-            print("You Entered the wrong value!")
-
     def report(n):
         print("1.Money left\n2.Total_money_spent\n3.List of items\n4.Exit")
         report_menu = int(input(""))
@@ -102,8 +81,8 @@ class Financial:
             data_ = json.load(f)
         Money_left = data["income"] - data_["Total"]
         Money_spent_perc = (data_["Total"]/data["income"])*100
-        print(f"You have spent {round(Money_spent_perc)}% of your money")
-        print(Money_left)
+        print(f"You have spent {round(Money_spent_perc)}% of your money.")
+        print(f"There are {Money_left}$ left.")
 
     def Total_Money_Spent(n):
         with open("data.json", "r") as f:
@@ -123,14 +102,40 @@ class Financial:
         with open("Total.josn", "w") as f:
             json.dump({"Total": total}, f)
         print(total)
-
     def List_of_Items(n):
         with open("data.json", "r") as f:
 
             data = json.load(f)
         for item in data:
             if isinstance(item, dict):
-                print(item["thing"])
+                print(f"{item["thing"]} : {item["price"]}")
+                
+    def delete_previous_data(n):
+        print(
+            "Enter 1 to clear previous Expense History\nEnter 2 to see the Complete History")
+        value = int(input(""))
+        if value == 1:
+            open("data.json", "w").close()
+            print("Your previous data has been deleted")
+        elif value == 2:
+            with open("data.json", "r") as f:
+                print("Your expense data is:")
+                data = json.load(f)
+                for item in data:
+                    if isinstance(item, dict):
+                        price = item.get("price")
+                        thing = item.get("thing")
+                        time = item.get("time")
+                        print(f" {thing} was bought of  {price}$  on {time}")
+                    else:
+                        print(item)
+
+        else:
+            print("You Entered the wrong value!")
+
+
+
+
 
 
 f = Financial()
