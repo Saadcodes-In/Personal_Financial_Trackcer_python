@@ -1,8 +1,5 @@
-from ast import Continue
 from datetime import datetime
 import json
-from operator import add
-
 
 
 print("Hello, Welcome to your Financial Tracker,\n\t How can i help you?")
@@ -22,12 +19,14 @@ class Financial:
     def add_income(n):
         while True:
             try:
+                global income
                 income = int(input("Enter your income: "))
+                with open("Income.json", "w") as f:
+                    json.dump({"income": income}, f, indent=4)
+
                 break
             except ValueError:
                 print("Your Income should be in numbers.")
-                
-            
 
     def add_expenses(n):
 
@@ -38,7 +37,7 @@ class Financial:
                 print("Your expenses have been saved")
                 break
             try:
-                thing , price = expense.split(" ")
+                thing, price = expense.split(" ")
                 time_now = datetime.now()
                 time_now_rounded_to_mins = time_now.strftime("%Y-%m-%d %H:%M")
                 total_expense = {
@@ -60,67 +59,78 @@ class Financial:
             except (ValueError, TypeError):
                 print("Invalid Format, Please use the given format")
 
-
     def delete_previous_data(n):
-         print("Enter 1 to clear previous Expense History\nEnter 2 to see the Complete History")
-         value = int(input(""))
-         if value == 1:
+        print(
+            "Enter 1 to clear previous Expense History\nEnter 2 to see the Complete History")
+        value = int(input(""))
+        if value == 1:
             open("data.json", "w").close()
             print("Your previous data has been deleted")
-         elif value ==2:
-             with open("data.json", "r") as f:
-                 print("Your expense data is:")
-                 data = json.load(f)
-                 for item in data:
-                     if isinstance(item, dict):
-                         for key, value, time in item.items():
-                             print(f"{key} : {value} : {time}")
-                     else:
-                         print(item)    
-                 
-         else:
-             print("You Entered the wrong value!")
-         
-    
+        elif value == 2:
+            with open("data.json", "r") as f:
+                print("Your expense data is:")
+                data = json.load(f)
+                for item in data:
+                    if isinstance(item, dict):
+                        for key, value, time in item.items():
+                            print(f"{key} : {value} : {time}")
+                    else:
+                        print(item)
+
+        else:
+            print("You Entered the wrong value!")
 
     def report(n):
-        print("1.Total_money_spent\n2.List of items\n3.Exit")
+        print("1.Money left\n2.Total_money_spent\n3.List of items\n4.Exit")
         report_menu = int(input(""))
         if report_menu == 1:
-            f.Total_Money_Spent()
+            f.Money_Left()
         elif report_menu == 2:
-            f.List_of_Items()
+            f.Total_Money_Spent()
         elif report_menu == 3:
+            f.List_of_Items()
+        elif report_menu == 4:
             print("Exit")
-            
-        
+
         else:
             print("There was something wrong")
+
+    def Money_Left(n):
+        with open("Income.json", "r") as f:
+            data = json.load(f)
+        with open("Total.json", "r") as f:
+            data_ = json.load(f)
+        Money_left = data["income"] - data_["Total"]
+        Money_spent_perc = (data_["Total"]/data["income"])*100
+        print(f"You have spent {round(Money_spent_perc)}% of your money")
+        print(Money_left)
+
     def Total_Money_Spent(n):
         with open("data.json", "r") as f:
-                
-                 data = json.load(f)
-                 total = 0
-                
-                 for item in data:
-                     if isinstance(item, dict):
-                         
-                            total += int(item["price"])
-                                   
-                             
-                             
-                             
-                     else:
-                         print(item) 
-                            
+
+            data = json.load(f)
+
+            global total
+            total = 0
+
+            for item in data:
+                if isinstance(item, dict):
+
+                    total += int(item["price"])
+
+                else:
+                    print(item)
+        with open("Total.josn", "w") as f:
+            json.dump({"Total": total}, f)
         print(total)
+
     def List_of_Items(n):
         with open("data.json", "r") as f:
-                
-                 data = json.load(f)
+
+            data = json.load(f)
         for item in data:
-              if isinstance(item, dict):
-                  print(item["thing"])
+            if isinstance(item, dict):
+                print(item["thing"])
 
 
 f = Financial()
@@ -136,10 +146,10 @@ elif menu == 3:
 
 elif menu == 4:
     f.delete_previous_data()
- 
+
 elif menu == 5:
     print("Thanks")
-    
+
 
 else:
     print("There is a problem")
