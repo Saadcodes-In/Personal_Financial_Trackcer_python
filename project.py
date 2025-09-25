@@ -1,6 +1,6 @@
 from datetime import datetime
 import json
-import time
+
 
 
 print("Hello, Welcome to your Financial Tracker,\n\t How can i help you?")
@@ -8,20 +8,14 @@ print("1.income\n2.Add expense\n3.view_report\n4.Previous Expense data\n5.Exit")
 
 
 class Financial:
-    def __init__(self):
-
-        ...
-
-        def __str__(self):
-
-            pass
-
-    def add_income(n, income):
+    
+    def add_income(self, income):
 
         with open("Income.json", "w") as f:
             json.dump({"income": income}, f, indent=4)
+            return income
 
-    def add_expenses(n, total_expense):
+    def add_expenses(self, total_expense):
 
         try:
             with open("data.json", "r") as file:
@@ -33,8 +27,9 @@ class Financial:
 
         with open("data.json", "w") as file:
             json.dump(data, file, indent=4)
+            return total_expense
 
-    def money_left(n):
+    def money_left(self):
         with open("Income.json", "r") as f:
             data = json.load(f)
         with open("Total.json", "r") as f:
@@ -50,7 +45,7 @@ class Financial:
             Money_debt = abs(Money_left)
             print(f"You have a debt of {Money_debt}$")
 
-    def total_money_spent(n):
+    def total_money_spent(self):
         with open("data.json", "r") as f:
 
             data = json.load(f)
@@ -68,8 +63,9 @@ class Financial:
             json.dump({"Total": total}, f)
 
         print(f"Total money spent is {total}$")
+        return total
 
-    def list_of_items(n):
+    def list_of_items(self):
 
         with open("data.json", "r") as f:
 
@@ -78,12 +74,12 @@ class Financial:
             if isinstance(item, dict):
                 print(f"{item["thing"]} : {item["price"]}")
 
-    def delete_previous_data(n):
+    def delete_previous_data(self):
 
         open("data.json", "w").close()
         print("Your previous data has been deleted")
 
-    def complete_history():
+    def complete_history(self):
         with open("data.json", "r") as f:
             print("Your expense data is:")
             data = json.load(f)
@@ -96,69 +92,71 @@ class Financial:
                 else:
                     print(item)
 
+def main():
+    f = Financial()
+    menu = int(input("Enter the Menu number:"))
+    if menu == 1:
+        while True:
+            try:
 
-f = Financial()
-menu = int(input("Enter the Menu number:"))
-if menu == 1:
-    while True:
-        try:
+                income = int(input("Enter your income: "))
+                break
+            except ValueError:
+                print("Your Income should be in numbers.")
+        f.add_income(income)
 
-            income = int(input("Enter your income: "))
-            break
-        except ValueError:
-            print("Your Income should be in numbers.")
-    f.add_income(income)
+    elif menu == 2:
+        while True:
+            expense = input(
+                "Enter the thing you spend moneyon(price/thing_category) or enter q to quit: ")
+            if expense.lower() in ("q", "quit", "exit"):
+                print("Your expenses have been saved")
+                break
+            try:
+                thing, price = expense.split(" ")
+                time_now = datetime.now()
+                time_now_rounded_to_mins = time_now.strftime("%Y-%m-%d %H:%M")
+                total_expense = {
+                    "price": price,
+                    "thing": thing,
+                    "time": time_now_rounded_to_mins
+                }
+            except (ValueError, TypeError):
+                print("Invalid Format, Please use the given format")
+        f.add_expenses(total_expense)
 
-elif menu == 2:
-    while True:
-        expense = input(
-            "Enter the thing you spend moneyon(price/thing_category) or enter q to quit: ")
-        if expense.lower() in ("q", "quit", "exit"):
-            print("Your expenses have been saved")
-            break
-        try:
-            thing, price = expense.split(" ")
-            time_now = datetime.now()
-            time_now_rounded_to_mins = time_now.strftime("%Y-%m-%d %H:%M")
-            total_expense = {
-                "price": price,
-                "thing": thing,
-                "time": time_now_rounded_to_mins
-            }
-        except (ValueError, TypeError):
-            print("Invalid Format, Please use the given format")
-    f.add_expenses(total_expense)
+    elif menu == 3:
 
-elif menu == 3:
+        print("1.Money left\n2.Total_money_spent\n3.List of items\n4.Exit")
+        report_menu = int(input(""))
+        if report_menu == 1:
+            f.money_left()
+        elif report_menu == 2:
+            f.total_money_spent()
+        elif report_menu == 3:
+            f.list_of_items()
+        elif report_menu == 4:
+            print("Exit")
 
-    print("1.Money left\n2.Total_money_spent\n3.List of items\n4.Exit")
-    report_menu = int(input(""))
-    if report_menu == 1:
-        f.money_left()
-    elif report_menu == 2:
-        f.total_money_spent()
-    elif report_menu == 3:
-        f.list_of_items()
-    elif report_menu == 4:
-        print("Exit")
+        else:
+            print("There was something wrong")
+
+
+    elif menu == 4:
+        print("Enter 1 to clear previous Expense History\nEnter 2 to see the Complete History")
+        value = int(input(""))
+        if value == 1:
+            f.delete_previous_data()
+        elif value == 2:
+            f.complete_history()
+        else:
+            print("You Entered the wrong value!")
+
+    elif menu == 5:
+        print("Thanks")
+
 
     else:
-        print("There was something wrong")
-
-
-elif menu == 4:
-    print("Enter 1 to clear previous Expense History\nEnter 2 to see the Complete History")
-    value = int(input(""))
-    if value == 1:
-        f.delete_previous_data()
-    elif value == 2:
-        f.complete_history()
-    else:
-        print("You Entered the wrong value!")
-
-elif menu == 5:
-    print("Thanks")
-
-
-else:
-    print("There is a problem")
+        print("There is a problem")
+if __name__ == "__main__":
+    main()
