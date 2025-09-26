@@ -1,4 +1,4 @@
-from project import Financial
+from main import Financial
 def test_add_income():
     f = Financial()
     assert f.add_income(100) == 100
