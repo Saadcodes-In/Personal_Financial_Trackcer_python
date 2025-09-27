@@ -13,7 +13,7 @@ A simple python program to help you keep track of your income and expenses. This
 main.py # main code
 test_project.py # for testing
 Total/data/income.json # for data handling and storing<br>
-<h>Example Usage</h>:
+<h>Example Usage</h>:<br>
 Enter expense (price category): 500 food
 Expense added successfully!
 <h>Contribution</h>:<br>
